@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+option csharp_namespace = "LiveEmoteEventProxy.Api.Contracts";
+
+import "google/protobuf/timestamp.proto";
+
+package emote;
+
+service Emotes {
+  rpc StreamEvents (stream PubSubRequest) returns (stream PubSubResponse);
+}
+
+message PubSubRequest {
+  repeated PubSubAction pubSubActions = 1;
+}
+
+message PubSubAction {
+  oneof action {
+    SubscribeAction subscribe = 1;
+    UnsubscribeAction unsubscribe = 2;
+    InfoAction info = 3;
+  }
+}
+
+enum EmoteProvider {
+  BetterTTV = 0;
+  SevenTV = 1;
+}
+
+// Subscribes to an event
+// If called multiples times for the same channel, duplicate subscriptions will be ignored
+message SubscribeAction {
+  int64 twitchChannelId = 1;
+  repeated EmoteProvider providers = 2;
+}
+
+// Unsubscribes from an event
+// If called multiples times for the same channel, duplicate unsubscriptions will be ignored
+message UnsubscribeAction {
+  int64 twitchChannelId = 1;
+  repeated EmoteProvider providers = 2;
+}
+
+// Gets the current status of a subscription, or all subscriptions for the current connection
+// Not really required for a POC
+//message SubscriptionStatus {
+//  optional int64 twitchChannelId = 1;
+//}
+
+// Returns information about the current connection
+message InfoAction {
+}
+
+
+
+
+// TODO: proper response model, via acknowledgements
+// FIXME: hate this naming (with a passion)
+message PubSubResponse {
+  oneof event {
+    // TODO: system events
+//    SystemCloseEvent disconnect = 1;
+
+    EmoteInitEvent init = 16;
+    EmoteAddedEvent added = 17;
+    EmoteRemovedEvent removed = 18;
+    EmoteUpdatedEvent updated = 19;
+  }
+}
+
+//message SystemCloseEvent {
+//  string reason = 1;
+//  optional string reconnectionToken = 2;
+//}
+
+//message ReconnectionData {
+//  string reconnection_token = 1;
+//  google.protobuf.Timestamp valid_until = 2;
+//}
+
+enum CloseType {
+  Hard = 0;
+
+  /*
+   * Reconnection to the server is recommended, and a reconnection token is available to resume the current session
+   */
+  Reconnect = 1;
+}
+
+message EmoteInitEvent {
+  // TODO: repeated emote added field to represent initial state
+  string stubData = 1;
+}
+
+message EmoteAddedEvent {
+  // Pretend like these events have actual models, haven't done that yet
+  string stubData = 1;
+}
+
+message EmoteRemovedEvent {
+  string stubData = 1;
+}
+
+message EmoteUpdatedEvent {
+  string stubData = 1;
+}
