@@ -46,11 +46,6 @@ message UnsubscribeAction {
   repeated EmoteProvider providers = 2;
 }
 
-// Gets the current status of a subscription, or all subscriptions for the current connection
-// Not really required for a POC
-//message SubscriptionStatus {
-//  optional int64 twitchChannelId = 1;
-//}
 
 
 
@@ -59,24 +54,12 @@ message UnsubscribeAction {
 message PubSubResponse {
   oneof event {
     // TODO: system events
-//    SystemCloseEvent disconnect = 1;
-
     EmoteInitEvent init = 16;
     EmoteAddedEvent added = 17;
     EmoteRemovedEvent removed = 18;
     EmoteUpdatedEvent updated = 19;
   }
 }
-
-//message SystemCloseEvent {
-//  string reason = 1;
-//  optional string reconnectionToken = 2;
-//}
-
-//message ReconnectionData {
-//  string reconnection_token = 1;
-//  google.protobuf.Timestamp valid_until = 2;
-//}
 
 enum CloseType {
   Hard = 0;
