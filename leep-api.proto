@@ -29,14 +29,20 @@ enum EmoteProvider {
 // Subscribes to an event
 // If called multiples times for the same channel, duplicate subscriptions will be ignored
 message SubscribeAction {
-  int64 twitchChannelId = 1;
+  oneof channel_identifier {
+    uint64 twitch = 1;
+  }
+
   repeated EmoteProvider providers = 2;
 }
 
 // Unsubscribes from an event
 // If called multiples times for the same channel, duplicate unsubscriptions will be ignored
 message UnsubscribeAction {
-  int64 twitchChannelId = 1;
+  oneof channel_identifier {
+    uint64 twitch = 1;
+  }
+
   repeated EmoteProvider providers = 2;
 }
 
